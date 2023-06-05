@@ -7,8 +7,8 @@ import pl.klusek.michal.gitApi.dto.GitHubRepositoryDTO;
 import pl.klusek.michal.gitApi.dto.ResponseDTO;
 import pl.klusek.michal.gitApi.resttemplate.GitHubRestTemplate;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service
 public class RepositoryService {
@@ -18,21 +18,27 @@ public class RepositoryService {
 
     public List<ResponseDTO> getRepositorysForUsers(String username) {
         List<GitHubRepositoryDTO> gitHubRepositoryDTO = gitHubRestTemplate.getRepositoriesForUser(username);
-        List<ResponseDTO> responseDTOList = new ArrayList<>();
 
-        for (GitHubRepositoryDTO repository : gitHubRepositoryDTO) {
-            List<BranchDTO> branchesFromRepository = getBranchesFromRepository(repository);
-            ResponseDTO responseDTO = new ResponseDTO(
-                    repository.getName(),
-                    repository.getOwner().getLogin(),
-                    branchesFromRepository);
-            responseDTOList.add(responseDTO);
-        }
+        List<ResponseDTO> responseDTOList = gitHubRepositoryDTO.stream()
+                .map(repository -> {
+                    List<BranchDTO> branchesFromRepository = getBranchesFromRepository(repository);
+                    return new ResponseDTO(
+                            repository.getName(),
+                            repository.getOwner().getLogin(),
+                            branchesFromRepository
+                    );
+                })
+                .collect(Collectors.toList());
+
         return responseDTOList;
     }
 
     public List<BranchDTO> getBranchesFromRepository(GitHubRepositoryDTO repository) {
         return gitHubRestTemplate.getBranches(repository);
+    }
+
+    public boolean checkIfGitUserExist(String username){
+        return this.gitHubRestTemplate.checkIfGitUserExist(username);
     }
 }
 
