@@ -18,7 +18,6 @@ public class RepositoryService {
 
     public List<ResponseDTO> getRepositorysForUsers(String username) {
         List<GitHubRepositoryDTO> gitHubRepositoryDTO = gitHubRestTemplate.getRepositoriesForUser(username);
-
         List<ResponseDTO> responseDTOList = gitHubRepositoryDTO.stream()
                 .map(repository -> {
                     List<BranchDTO> branchesFromRepository = getBranchesFromRepository(repository);

@@ -23,7 +23,7 @@ public class GitRestController {
 
         if ("application/xml".equals(acceptHeader)) {
             errorList.add(new ErrorResponseDTO(406, "Unsupported Media Type"));
-            return ResponseEntity.status(406).body(errorList);
+            return ResponseEntity.status(406).header("Conent-Type", "application/xml").body(errorList);
         }
         if (!repositoryService.checkIfGitUserExist(username)) {
             errorList.add(new ErrorResponseDTO(404, "User not found: " + username));

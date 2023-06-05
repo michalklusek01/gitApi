@@ -26,7 +26,7 @@ public class GitHubRestTemplate {
     }
 
     public List<GitHubRepositoryDTO> getRepositoriesForUser(String username) {
-        String URL = API_URL + "users/" + username + "/repos?fork=true";
+        String URL = API_URL + "users/" + username + "/repos?fork=false";
         headers.setAccept(List.of(MediaType.APPLICATION_JSON));
         headers.set("Accept", ACCEPT_HEADER);
         HttpEntity<String> entity = new HttpEntity<>(headers);
